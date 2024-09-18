@@ -29,7 +29,6 @@ fs.readFile("file.txt", "utf8", (err, data) => {
       // Ensure that both are valid numbers before calculation
       if (!isNaN(firstNumber) && !isNaN(lastNumber)) {
         let twoDigitNumber = firstNumber * 10 + lastNumber;
-        console.log(twoDigitNumber);
         sum = sum + twoDigitNumber;
       }
     }
