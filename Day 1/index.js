@@ -1,37 +1,38 @@
-const readline = require("readline");
+const fs = require("fs");
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+fs.readFile("file.txt", "utf8", (err, data) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
 
-let sum = 0;
+  const lines = data.split("\n");
+  let sum = 0;
+  lines.forEach((line) => {
+    let numbersInLine = [];
 
-console.log(
-  "Enter lines (each containing at least one digit), type 'END' to finish:"
-);
+    // Extract only numeric characters from the line
+    for (let char of line) {
+      if (!isNaN(char) && char.trim() !== "") {
+        numbersInLine.push(char);
+      }
+    }
 
-rl.on("line", (line) => {
-  if (line === "END") {
-    rl.close(); // Stop when user types 'END'
-  } else {
-    // Extract digits from the line
-    const digits = line.match(/\d/g); // Match all digits in the line
-    if (digits && digits.length > 0) {
-      let firstDigit = digits[0];
-      let lastDigit = digits[digits.length - 1];
+    if (numbersInLine.length > 0) {
+      let firstNumber = parseInt(numbersInLine[0], 10);
+      let lastNumber = parseInt(numbersInLine[numbersInLine.length - 1], 10);
 
-      // If there's only one digit in the line, use it for both the first and last digit
-      if (digits.length === 1) {
-        lastDigit = firstDigit; // Make both digits the same
+      if (numbersInLine.length === 1) {
+        lastNumber = firstNumber;
       }
 
-      const twoDigitNumber = parseInt(firstDigit + lastDigit, 10); // Form a two-digit number
-      sum += twoDigitNumber; // Add to the sum
+      // Ensure that both are valid numbers before calculation
+      if (!isNaN(firstNumber) && !isNaN(lastNumber)) {
+        let twoDigitNumber = firstNumber * 10 + lastNumber;
+        console.log(twoDigitNumber);
+        sum = sum + twoDigitNumber;
+      }
     }
-  }
-});
-
-rl.on("close", () => {
-  console.log(`The sum of the two-digit numbers is: ${sum}`);
+  });
+  console.log(sum);
 });
